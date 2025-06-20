@@ -20,7 +20,6 @@
 ;; Version: 0.1
 ;; Package-Requires: ((emacs "26.1"))
 ;; URL: https://github.com/MichaelKazarian/dired-lister
-;; Status: not intended to be distributed yet
 
 ;;; Commentary:
 ;; This package provides a minor mode for previewing files in Dired.
