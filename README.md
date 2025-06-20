@@ -8,7 +8,7 @@ Emacs Lisp package that provides a minor mode for Dired, enabling convenient fil
 - Customizable keybindings, window position, and preview behavior.
 - Locally disables specified modes (e.g., `company-mode`) and hooks (e.g., `after-change-major-mode-hook`) in the preview buffer to avoid unwanted behavior.
 
-![Dired Sort Menu](img/dired-lister.png)
+![dired-lister](img/dired-lister.png)
 
 ## Installation
 1. Place `dired-lister.el` in your Emacs load path.
