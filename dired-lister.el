@@ -193,22 +193,21 @@ Also disables the hook associated with the current major-mode."
   "Display the preview buffer BUF in a side window."
   (let ((buffer-list-update-hook nil)
         (window-configuration-change-hook nil)
-        (display-buffer-alist nil))
-    (save-selected-window
-      (let ((window (display-buffer
-                     buf
-                     `((display-buffer-in-side-window)
-                       (side . ,dired-lister-window-side)
-                       (window-width . 0.5)
-                       (slot . 1)
-                       (window-parameters (no-delete-other-windows . t)
-                                          (dedicated . t)
-                                          (dired-lister-just-created . t))))))
-        (when window
-          (set-window-dedicated-p window t)
-          (when dired-lister-auto-focus
-            (select-window window)))
-        window))))
+        (display-buffer-alist nil)
+        (window (display-buffer
+                 buf
+                 `((display-buffer-in-side-window)
+                   (side . ,dired-lister-window-side)
+                   (window-width . 0.5)
+                   (slot . 1)
+                   (window-parameters (no-delete-other-windows . t)
+                                      (dedicated . t)
+                                      (dired-lister-just-created . t))))))
+    (when window
+      (set-window-dedicated-p window t)
+      (when dired-lister-auto-focus
+        (select-window window)))
+    window))
 
 (defun dired-lister-setup-keybindings ()
   "Set up keybindings for the preview buffer."
