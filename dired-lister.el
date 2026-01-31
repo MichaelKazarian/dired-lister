@@ -1,4 +1,4 @@
-;;; dired-lister.el --- Minor mode for previewing files in Dired
+;;; dired-lister.el --- Minor mode for previewing files in Dired -*-lexical-binding: t-*-
 
 ;; Copyright (C) 2025 Mykhailo Kazarian
 ;;
@@ -54,6 +54,8 @@
 ;; Use `M-x customize-group RET dired-lister RET' to adjust settings.
 
 ;;; Code:
+
+(require 'dired)
 
 (defcustom dired-lister-auto-focus nil
   "If non-nil, automatically focus the preview window after opening it."
@@ -165,7 +167,9 @@ When enabled, provides functionality to preview files in a side window."
       (setq-local previewed-dired-window (get-mru-window nil t t)))))
 
 (defun dired-lister-disable-hooks-and-modes ()
-  "Disable hooks and modes specified in `dired-lister-disabled-hooks` and `dired-lister-disabled-modes` locally in the current buffer.
+  "Disable dired-lister hooks and modes for current buffer.
+Disable hooks and modes  specified in `dired-lister-disabled-hooks'
+and `dired-lister-disabled-modes'.
 Also disables the hook associated with the current major-mode."
   (message "Running dired-lister-disable-hooks-and-modes in buffer %s" (current-buffer))
   (let ((mode-hook (intern-soft (concat (symbol-name major-mode) "-hook"))))
