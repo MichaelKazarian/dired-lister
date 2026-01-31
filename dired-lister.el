@@ -97,6 +97,13 @@ Valid values are `right', `left', `top', or `bottom'."
   :type '(repeat symbol)
   :group 'dired-lister)
 
+(defcustom dired-lister-verbose nil
+  "When non-nil `dired-lister' display operation messages.
+Otherwise it does not."
+  :type 'boolean
+  :safe #'booleanp
+  :group 'dired-lister)
+
 (defcustom dired-lister-disabled-hooks
   '(after-change-major-mode-hook)
   "List of hooks to disable in the preview buffer."
@@ -178,20 +185,23 @@ Also disables the hook associated with the current major-mode."
       (when (boundp hook)
         (make-local-variable hook)
         (set hook nil)
-        ;; (message "Disabled hook locally: %s" hook)
-        ))
+        (unless dired-lister-verbose
+          (message "Disabled hook locally: %s" hook))))
     ;; Disable the major-mode specific hook locally
     (when mode-hook
       (make-local-variable mode-hook)
       (set mode-hook nil)
-      ;; (message "Disabled major-mode hook locally: %s for major-mode: %s" mode-hook major-mode)
-      )
+      (unless dired-lister-verbose
+        (message "Disabled major-mode hook locally: %s for major-mode: %s" mode-hook major-mode)))
     ;; Disable modes
     (dolist (mode dired-lister-disabled-modes)
-      (when (and (fboundp mode) (functionp mode))
+      (when (and (fboundp mode)
+                 (functionp mode)
+                 (boundp mode)
+                 mode)
         (funcall mode -1)
-        ;; (message "Disabled mode: %s" mode)
-        ))))
+        (unless dired-lister-verbose
+          (message "Disabled mode: %s" mode))))))
 
 (defun dired-lister-display-buffer (buf)
   "Display the preview buffer BUF in a side window."
@@ -262,7 +272,9 @@ Also disables the hook associated with the current major-mode."
   (interactive)
   (let ((win (selected-window)))
     (quit-window t win)
-    (when (and previewed-dired-window (windowp previewed-dired-window) (window-live-p previewed-dired-window))
+    (when (and previewed-dired-window
+               (windowp previewed-dired-window)
+               (window-live-p previewed-dired-window))
       (select-window previewed-dired-window))))
 
 (defun dired-lister-close-on-dired-exit ()
@@ -271,8 +283,9 @@ Also disables the hook associated with the current major-mode."
     (let ((buf (dired-lister--buffer))
           (win (dired-lister--window)))
       (when (and buf (buffer-live-p buf) win (window-live-p win))
-        ;; (message "Closing preview window %s for buffer %s on Dired exit"
-        ;;          win buf)
+        (unless dired-lister-verbose
+          (message "Closing preview window %s for buffer %s on Dired exit"
+                   win buf))
         (with-selected-window win
           (quit-window nil win))))))
 
