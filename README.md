@@ -7,6 +7,7 @@ Emacs Lisp package that provides a minor mode for Dired, enabling convenient fil
 - Automatically closes the preview window when quitting Dired (`q` or `C-x k`).
 - Customizable keybindings, window position, and preview behavior.
 - Locally disables specified modes (e.g., `company-mode`) and hooks (e.g., `after-change-major-mode-hook`) in the preview buffer to avoid unwanted behavior.
+- Optional verbose logging for debugging and initialization.
 
 ![dired-lister](img/dired-lister.png)
 
@@ -34,6 +35,7 @@ Customize settings via `M-x customize-group RET dired-lister RET` or by adding L
 - `dired-lister-window-side`: Choose the preview window side (`right`, `left`, `top`, `bottom`; default: `right`).
 - `dired-lister-file-key`, `dired-lister-quit-dired-key`, `dired-lister-quit-key`, `dired-lister-edit-key`: Customize keybindings.
 - `dired-lister-disabled-modes`, `dired-lister-disabled-hooks`: Specify modes and hooks to disable locally in the preview buffer.
+- `dired-lister-verbose`: Set to `t` to display operation messages in the echo area (default: `nil`)
 
 Example Lisp customization:
 ```elisp
@@ -44,6 +46,7 @@ Example Lisp customization:
       '(company-mode flyspell-mode))
 (setq dired-lister-disabled-hooks         ; Disable additional hooks in preview
       '(after-change-major-mode-hook org-mode-hook))
+(setq dired-lister-verbose t)             ; Show debug messages
 ```
 
 ## Requirements
