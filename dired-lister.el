@@ -121,20 +121,43 @@ When enabled, provides functionality to preview files in a side window."
   :lighter " Dired-Lister"
   (if dired-lister-mode
       (progn
-        (when dired-lister-file-key
-          (define-key dired-mode-map dired-lister-file-key #'dired-lister-file))
-        (when dired-lister-quit-dired-key
-          (define-key dired-mode-map dired-lister-quit-dired-key #'dired-lister-quit-dired))
-        (add-hook 'kill-buffer-hook #'dired-lister-close-on-dired-exit)
-        (add-hook 'buffer-list-update-hook #'dired-lister-cleanup))
+        (add-hook 'dired-mode-hook #'dired-lister--setup-dired-buffer)
+        (add-hook 'buffer-list-update-hook #'dired-lister-cleanup)
+        (dired-lister--apply-to-all-dired-buffers))
     (progn
-      (when dired-lister-file-key
-        (define-key dired-mode-map dired-lister-file-key nil))
-      (when dired-lister-quit-dired-key
-        (define-key dired-mode-map dired-lister-quit-dired-key nil))
-      (remove-hook 'kill-buffer-hook #'dired-lister-close-on-dired-exit)
+      (remove-hook 'dired-mode-hook #'dired-lister--setup-dired-buffer)
       (remove-hook 'buffer-list-update-hook #'dired-lister-cleanup)
+      (dired-lister--remove-from-all-dired-buffers)
       (dired-lister-close-previous))))
+
+(defun dired-lister--apply-to-all-dired-buffers ()
+  "Apply dired-lister settings to all existing Dired buffers."
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when (derived-mode-p 'dired-mode)
+        (dired-lister--setup-dired-buffer)))))
+
+(defun dired-lister--remove-from-all-dired-buffers ()
+  "Remove dired-lister settings from all existing Dired buffers."
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when (derived-mode-p 'dired-mode)
+        (dired-lister--revert-dired-buffer)))))
+
+(defun dired-lister--setup-dired-buffer ()
+  "Setup local bindings and hooks for Dired buffer."
+  (when dired-lister-file-key
+    (local-set-key dired-lister-file-key #'dired-lister-file))
+  (when dired-lister-quit-dired-key
+    (local-set-key dired-lister-quit-dired-key #'dired-lister-quit-dired))
+  ;; nil t: make the hook buffer-local.
+  (add-hook 'kill-buffer-hook #'dired-lister-close-on-dired-exit nil t))
+
+(defun dired-lister--revert-dired-buffer ()
+  "Remove local bindings and hooks from Dired buffer."
+  (local-set-key dired-lister-file-key nil)
+  (local-set-key dired-lister-quit-dired-key nil)
+  (remove-hook 'kill-buffer-hook #'dired-lister-close-on-dired-exit t))
 
 (defun dired-lister--buffer ()
   "Return the preview buffer if it exists."
@@ -294,15 +317,6 @@ Also disables the hook associated with the current major-mode."
   (interactive)
   (dired-lister-close-on-dired-exit)
   (quit-window))
-
-(with-eval-after-load 'dired
-  (when dired-lister-file-key
-    (define-key dired-mode-map dired-lister-file-key #'dired-lister-file))
-  (when dired-lister-quit-dired-key
-    (define-key dired-mode-map dired-lister-quit-dired-key #'dired-lister-quit-dired))
-  (add-hook 'kill-buffer-hook #'dired-lister-close-on-dired-exit))
-
-(add-hook 'buffer-list-update-hook #'dired-lister-cleanup)
 
 (provide 'dired-lister)
 ;;; dired-lister.el ends here
