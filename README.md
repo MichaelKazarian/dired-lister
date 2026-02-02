@@ -35,7 +35,7 @@ Customize settings via `M-x customize-group RET dired-lister RET` or by adding L
 - `dired-lister-window-side`: Choose the preview window side (`right`, `left`, `top`, `bottom`; default: `right`).
 - `dired-lister-file-key`, `dired-lister-quit-dired-key`, `dired-lister-quit-key`, `dired-lister-edit-key`: Customize keybindings.
 - `dired-lister-disabled-modes`, `dired-lister-disabled-hooks`: Specify modes and hooks to disable locally in the preview buffer.
-- `dired-lister-verbose`: Set to `t` to display operation messages in the echo area (default: `nil`)
+- `dired-lister-verbose`: Set to `t` to display operation messages in the echo area (default: `nil`).
 
 Example Lisp customization:
 ```elisp
@@ -56,7 +56,7 @@ Example Lisp customization:
 Dired Lister is distributed under the GNU General Public License v3.0 or later. See the [LICENSE](https://www.gnu.org/licenses/) for details.
 
 ## Status
-This package is not yet intended for public distribution. For updates, check the [GitHub repository](https://github.com/michael-kazarian/rc-dired).
+This package is not yet intended for public distribution. For updates, check the [GitHub repository](https://github.com/michael-kazarian/dired-lister).
 
 ## Author
 Michael Kazarian (<michael.kazarian@gmail.com>)
