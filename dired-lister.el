@@ -201,20 +201,22 @@ When enabled, provides functionality to preview files in a side window."
 Disable hooks and modes  specified in `dired-lister-disabled-hooks'
 and `dired-lister-disabled-modes'.
 Also disables the hook associated with the current major-mode."
-  (message "Running dired-lister-disable-hooks-and-modes in buffer %s" (current-buffer))
+  (when dired-lister-verbose
+    (message "Running dired-lister-disable-hooks-and-modes in buffer %s"
+             (current-buffer)))
   (let ((mode-hook (intern-soft (concat (symbol-name major-mode) "-hook"))))
     ;; Disable hooks from the custom list locally
     (dolist (hook dired-lister-disabled-hooks)
       (when (boundp hook)
         (make-local-variable hook)
         (set hook nil)
-        (unless dired-lister-verbose
+        (when dired-lister-verbose
           (message "Disabled hook locally: %s" hook))))
     ;; Disable the major-mode specific hook locally
     (when mode-hook
       (make-local-variable mode-hook)
       (set mode-hook nil)
-      (unless dired-lister-verbose
+      (when dired-lister-verbose
         (message "Disabled major-mode hook locally: %s for major-mode: %s" mode-hook major-mode)))
     ;; Disable modes
     (dolist (mode dired-lister-disabled-modes)
@@ -223,7 +225,7 @@ Also disables the hook associated with the current major-mode."
                  (boundp mode)
                  mode)
         (funcall mode -1)
-        (unless dired-lister-verbose
+        (when dired-lister-verbose
           (message "Disabled mode: %s" mode))))))
 
 (defun dired-lister-display-buffer (buf)
@@ -306,7 +308,7 @@ Also disables the hook associated with the current major-mode."
     (let ((buf (dired-lister--buffer))
           (win (dired-lister--window)))
       (when (and buf (buffer-live-p buf) win (window-live-p win))
-        (unless dired-lister-verbose
+        (when dired-lister-verbose
           (message "Closing preview window %s for buffer %s on Dired exit"
                    win buf))
         (with-selected-window win
